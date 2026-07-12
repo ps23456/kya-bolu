@@ -59,11 +59,21 @@ const replySchema = {
   },
 } as const
 
+const corsHeaders = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'POST, OPTIONS',
+  'access-control-allow-headers': 'content-type',
+}
+
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8' },
+    headers: { 'content-type': 'application/json; charset=utf-8', ...corsHeaders },
   })
+}
+
+export function onRequestOptions() {
+  return new Response(null, { headers: corsHeaders })
 }
 
 async function fileToDataUrl(file: File) {

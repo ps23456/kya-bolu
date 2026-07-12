@@ -1,10 +1,20 @@
 const voiceId = 'pNInz6obpgDQGcFmaJgB'
 
+const corsHeaders = {
+  'access-control-allow-origin': '*',
+  'access-control-allow-methods': 'POST, OPTIONS',
+  'access-control-allow-headers': 'content-type',
+}
+
 function jsonResponse(body: unknown, status = 200) {
   return new Response(JSON.stringify(body), {
     status,
-    headers: { 'content-type': 'application/json; charset=utf-8' },
+    headers: { 'content-type': 'application/json; charset=utf-8', ...corsHeaders },
   })
+}
+
+export function onRequestOptions() {
+  return new Response(null, { headers: corsHeaders })
 }
 
 export async function onRequestPost({ request, env }: { request: Request; env: { ELEVENLABS_API_KEY?: string } }) {
@@ -46,6 +56,7 @@ export async function onRequestPost({ request, env }: { request: Request; env: {
       headers: {
         'content-type': 'audio/mpeg',
         'cache-control': 'no-store',
+        ...corsHeaders,
       },
     })
   } catch {
