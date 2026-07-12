@@ -137,7 +137,7 @@ bot.on('message', async (ctx) => {
   }
 })
 
-await bot.telegram.deleteWebhook({ drop_pending_updates: true })
+await bot.telegram.deleteWebhook()
 const me = await bot.telegram.getMe()
 console.log(`Kya Bolu Telegram bot running as @${me.username}`)
 await bot.launch()
