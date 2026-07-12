@@ -61,6 +61,16 @@ function App() {
     if (user?.tone_profile) setToneDraft(user.tone_profile)
   }, [user?.tone_profile])
 
+  useEffect(() => {
+    if (!activeEmail || user !== null) return
+
+    void getOrCreateUser({ email: activeEmail }).catch(() => {
+      localStorage.removeItem(EMAIL_STORAGE_KEY)
+      setActiveEmail('')
+      setError('Please enter your email again.')
+    })
+  }, [activeEmail, getOrCreateUser, user])
+
   function handleFiles(files: FileList | null) {
     const nextImage = files?.[0]
     if (!nextImage) return
@@ -226,7 +236,7 @@ function App() {
         </section>
       )}
 
-      {activeEmail && !user && (
+      {activeEmail && user === undefined && (
         <section className="composer-card">
           <div className="loading-vibe" aria-live="polite">
             <span>Loading your vibe...</span>
