@@ -44,6 +44,7 @@ function App() {
   const [error, setError] = useState('')
   const [isLoading, setIsLoading] = useState(false)
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
+  const [savageAudio, setSavageAudio] = useState<'idle' | 'loading' | 'error'>('idle')
 
   const user = useQuery(api.users.getByEmail, activeEmail ? { email: activeEmail } : 'skip')
   const getOrCreateUser = useMutation(api.users.getOrCreate)
@@ -163,6 +164,28 @@ function App() {
     await navigator.clipboard.writeText(text)
     setCopiedIndex(index)
     window.setTimeout(() => setCopiedIndex(null), 1400)
+  }
+
+  async function playSavage(text: string) {
+    setSavageAudio('loading')
+
+    try {
+      const response = await fetch('/api/tts', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ text }),
+      })
+
+      if (!response.ok) throw new Error('Could not load audio.')
+
+      const url = URL.createObjectURL(await response.blob())
+      const audio = new Audio(url)
+      audio.onended = () => URL.revokeObjectURL(url)
+      await audio.play()
+      setSavageAudio('idle')
+    } catch {
+      setSavageAudio('error')
+    }
   }
 
   function resetUser() {
@@ -327,6 +350,15 @@ function App() {
                     <p className="tone">{style.title}</p>
                     <p className="reply-text">{reply.text}</p>
                   </div>
+                  {index === 1 && (
+                    <div className="voice-action">
+                      <button type="button" className="voice-button" onClick={() => void playSavage(reply.text)} disabled={savageAudio === 'loading'}>
+                        {savageAudio === 'loading' ? <span className="button-spinner" aria-hidden="true" /> : '🔊'}
+                        {savageAudio === 'loading' ? 'Loading voice...' : 'Play savage'}
+                      </button>
+                      {savageAudio === 'error' && <small>coudnt load audio</small>}
+                    </div>
+                  )}
                   <button type="button" onClick={() => void copyReply(reply.text, index)}>
                     {copiedIndex === index ? 'COPIED!' : 'COPY'}
                   </button>

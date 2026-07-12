@@ -417,6 +417,37 @@ textarea::placeholder {
   font-size: 1rem;
 }
 
+.voice-action {
+  display: grid;
+  gap: 8px;
+}
+
+.reply-card .voice-button {
+  display: inline-flex;
+  width: 100%;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+  border: 1px solid rgba(255, 255, 255, 0.18);
+  color: #fff7ed;
+  background: rgba(255, 255, 255, 0.1);
+  box-shadow: none;
+}
+
+.voice-action small {
+  color: #fecaca;
+  font-weight: 800;
+}
+
+.button-spinner {
+  width: 17px;
+  height: 17px;
+  border: 2px solid rgba(255, 247, 237, 0.34);
+  border-top-color: #fff7ed;
+  border-radius: 999px;
+  animation: spin 750ms linear infinite;
+}
+
 footer {
   margin-top: 22px;
   color: rgba(255, 247, 237, 0.62);
@@ -473,6 +504,12 @@ footer {
 }
 
 @keyframes hero-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@keyframes spin {
   to {
     transform: rotate(1turn);
   }
