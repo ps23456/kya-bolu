@@ -13,6 +13,18 @@ interface ReplyResponse {
   replies: ReplyOption[]
 }
 
+const replyStyles = [
+  { title: 'POLITE', className: 'polite', emoji: '🌿' },
+  { title: 'SAVAGE', className: 'savage', emoji: '🔥' },
+  { title: 'ESCAPE', className: 'escape', emoji: '🛟' },
+] as const
+
+const loadingLines = [
+  'Reading the vibe...',
+  'Deciding how burnt they deserve to be...',
+  'Crafting your escape...',
+]
+
 function App() {
   const fileInputRef = useRef<HTMLInputElement | null>(null)
   const [image, setImage] = useState<File | null>(null)
@@ -86,6 +98,9 @@ function App() {
         <p className="eyebrow">screenshots in, comebacks out</p>
         <h1>Kya Bolu?</h1>
         <p className="tagline">Never leave anyone on read. Or do — stylishly.</p>
+        <p className="emoji-row" aria-label="mood menu">
+          💬 📸 ⌨️ 🔥 🛟 ✨
+        </p>
       </section>
 
       <form className="composer-card" onSubmit={handleSubmit}>
@@ -108,6 +123,10 @@ function App() {
             <img src={previewUrl} alt="Uploaded chat screenshot preview" />
           ) : (
             <span className="drop-copy">
+              <span className="drop-icons" aria-hidden="true">
+                <span>📸</span>
+                <span>⌨️</span>
+              </span>
               <strong>Drop a chat screenshot</strong>
               <small>or tap to open camera / gallery</small>
             </span>
@@ -121,7 +140,7 @@ function App() {
         )}
 
         <label className="text-input-label" htmlFor="conversation-text">
-          Or paste the conversation
+          <span aria-hidden="true">⌨️</span> Or paste the conversation
         </label>
         <textarea
           id="conversation-text"
@@ -132,8 +151,23 @@ function App() {
 
         {error && <p className="error-message">{error}</p>}
 
+        {isLoading && (
+          <div className="loading-vibe" aria-live="polite">
+            <span className="loading-texts">
+              {loadingLines.map((line) => (
+                <span key={line}>{line}</span>
+              ))}
+            </span>
+            <span className="loading-dots" aria-hidden="true">
+              <i />
+              <i />
+              <i />
+            </span>
+          </div>
+        )}
+
         <button className="submit-button" type="submit" disabled={!hasInput || isLoading}>
-          {isLoading ? 'Cooking replies...' : 'Tell me what to say'}
+          {isLoading ? 'Summoning the perfect reply' : 'Tell me what to say'}
         </button>
       </form>
 
@@ -145,20 +179,29 @@ function App() {
           </div>
 
           <div className="reply-grid">
-            {result.replies.map((reply, index) => (
-              <article className="reply-card" key={`${reply.tone}-${reply.text}`}>
-                <div>
-                  <p className="tone">{reply.tone}</p>
-                  <p className="reply-text">{reply.text}</p>
-                </div>
-                <button type="button" onClick={() => void copyReply(reply.text, index)}>
-                  {copiedIndex === index ? 'Copied!' : 'Copy'}
-                </button>
-              </article>
-            ))}
+            {result.replies.map((reply, index) => {
+              const style = replyStyles[index] ?? replyStyles[0]
+
+              return (
+                <article className={`reply-card ${style.className}`} key={`${index}-${reply.text}`}>
+                  <span className="card-emoji" aria-hidden="true">
+                    {style.emoji}
+                  </span>
+                  <div>
+                    <p className="tone">{style.title}</p>
+                    <p className="reply-text">{reply.text}</p>
+                  </div>
+                  <button type="button" onClick={() => void copyReply(reply.text, index)}>
+                    {copiedIndex === index ? 'COPIED!' : 'COPY'}
+                  </button>
+                </article>
+              )
+            })}
           </div>
         </section>
       )}
+
+      <footer>Built at Hermes Buildathon ⚡ by Priyanshi</footer>
     </main>
   )
 }
