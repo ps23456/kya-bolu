@@ -304,7 +304,6 @@ function App() {
                 ref={fileInputRef}
                 type="file"
                 accept="image/*"
-                capture="environment"
                 onChange={(event) => handleFiles(event.target.files)}
               />
               {previewUrl ? (
@@ -316,7 +315,7 @@ function App() {
                     <span>⌨️</span>
                   </span>
                   <strong>Drop a chat screenshot</strong>
-                  <small>or tap to open camera / gallery</small>
+                  <small>tap to choose screenshot / gallery</small>
                 </span>
               )}
             </label>
