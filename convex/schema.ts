@@ -5,7 +5,9 @@ export default defineSchema({
   users: defineTable({
     email: v.string(),
     telegramChatId: v.optional(v.string()),
+    paid: v.optional(v.boolean()),
     tone_profile: v.string(),
+    tone_profile_memory: v.optional(v.array(v.string())),
     sessionCount: v.number(),
     createdAt: v.number(),
     updatedAt: v.number(),

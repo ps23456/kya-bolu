@@ -53,9 +53,13 @@ function App() {
 
   const previewUrl = useMemo(() => (image ? URL.createObjectURL(image) : ''), [image])
   const hasInput = Boolean(image || conversationText.trim())
+  const isPaid = Boolean(user?.paid)
   const sessionsUsed = user?.sessionCount ?? 0
   const sessionsLeft = Math.max(0, FREE_SESSION_LIMIT - sessionsUsed)
-  const isLimitReached = Boolean(user && sessionsUsed >= FREE_SESSION_LIMIT)
+  const isLimitReached = Boolean(user && !isPaid && sessionsUsed >= FREE_SESSION_LIMIT)
+  const welcomeLine = isPaid
+    ? `Welcome back ${user?.email}! Unlimited replies are unlocked.`
+    : `Welcome back ${user?.email}! You have ${sessionsLeft} free repl${sessionsLeft === 1 ? 'y' : 'ies'} left.`
 
   useEffect(() => {
     if (user?.tone_profile) setToneDraft(user.tone_profile)
@@ -218,8 +222,8 @@ function App() {
 
       {!activeEmail && (
         <section className="composer-card email-card">
-          <p className="mini-label">First one’s on the house. Three, actually.</p>
-          <h2>Drop your email to start.</h2>
+          <p className="mini-label">Enter your email to get 3 free replies</p>
+          <h2>Start with your email.</h2>
           <form onSubmit={handleEmailSubmit}>
             <input
               type="email"
@@ -253,8 +257,9 @@ function App() {
         <>
           <section className="profile-card">
             <div>
-              <p className="mini-label">{sessionsLeft} free session{sessionsLeft === 1 ? '' : 's'} left</p>
+              <p className="mini-label">{isPaid ? 'Paid account' : `${sessionsLeft} free repl${sessionsLeft === 1 ? 'y' : 'ies'} left`}</p>
               <p className="user-email">{user.email}</p>
+              <p className="welcome-line">{welcomeLine}</p>
             </div>
             <label>
               Tone profile
@@ -265,12 +270,9 @@ function App() {
                 placeholder="balanced, witty, low-drama"
               />
             </label>
-            <button type="button" className="ghost-button compact" onClick={resetUser}>
-              Switch email
-            </button>
           </section>
 
-          <form className="composer-card" onSubmit={handleSubmit}>
+          {!isLimitReached && <form className="composer-card" onSubmit={handleSubmit}>
             <label
               className={`drop-zone ${image ? 'has-image' : ''}`}
               onDragOver={(event) => event.preventDefault()}
@@ -333,10 +335,10 @@ function App() {
               </div>
             )}
 
-            <button className="submit-button" type="submit" disabled={(!hasInput && !isLimitReached) || isLoading}>
-              {isLimitReached ? 'Upgrade to keep replying' : isLoading ? 'Summoning the perfect reply' : 'Tell me what to say'}
+            <button className="submit-button" type="submit" disabled={!hasInput || isLoading}>
+              {isLoading ? 'Summoning the perfect reply' : 'Tell me what to say'}
             </button>
-          </form>
+          </form>}
         </>
       )}
 
@@ -388,6 +390,12 @@ function App() {
             Join upgrade waitlist
           </button>
         </section>
+      )}
+
+      {activeEmail && (
+        <button type="button" className="account-link" onClick={resetUser}>
+          Not you? Switch account
+        </button>
       )}
 
       <footer>Built at Hermes Buildathon ⚡ by Priyanshi</footer>

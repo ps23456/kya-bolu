@@ -4,6 +4,19 @@ import { v } from "convex/values";
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 const defaultToneProfile = "balanced, witty, low-drama";
 
+function newUser(now: number, email: string, telegramChatId?: string) {
+  return {
+    email,
+    telegramChatId,
+    paid: false,
+    tone_profile: defaultToneProfile,
+    tone_profile_memory: [],
+    sessionCount: 0,
+    createdAt: now,
+    updatedAt: now,
+  };
+}
+
 export const getByEmail = query({
   args: { email: v.string() },
   handler: async (ctx, args) => {
@@ -35,15 +48,7 @@ export const getOrCreate = mutation({
 
     if (existing) return existing;
 
-    const now = Date.now();
-    const id = await ctx.db.insert("users", {
-      email,
-      tone_profile: defaultToneProfile,
-      sessionCount: 0,
-      createdAt: now,
-      updatedAt: now,
-    });
-
+    const id = await ctx.db.insert("users", newUser(Date.now(), email));
     return await ctx.db.get(id);
   },
 });
@@ -69,15 +74,7 @@ export const getOrCreateTelegram = mutation({
       return await ctx.db.get(existing._id);
     }
 
-    const id = await ctx.db.insert("users", {
-      email,
-      telegramChatId: args.telegramChatId,
-      tone_profile: defaultToneProfile,
-      sessionCount: 0,
-      createdAt: now,
-      updatedAt: now,
-    });
-
+    const id = await ctx.db.insert("users", newUser(now, email, args.telegramChatId));
     return await ctx.db.get(id);
   },
 });

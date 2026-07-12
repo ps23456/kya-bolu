@@ -626,6 +626,22 @@ h2 {
   font-weight: 800;
 }
 
+.welcome-line {
+  margin: 6px 0 0;
+  color: rgba(255, 247, 237, 0.7);
+  font-weight: 750;
+}
+
+.account-link {
+  display: block;
+  margin: 18px auto 0;
+  border: 0;
+  color: rgba(255, 247, 237, 0.72);
+  background: transparent;
+  font-weight: 800;
+  text-decoration: underline;
+}
+
 .ghost-button.compact {
   width: auto;
   margin-top: 0;

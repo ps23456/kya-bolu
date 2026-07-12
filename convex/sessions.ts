@@ -1,6 +1,12 @@
 import { mutation } from "./_generated/server";
 import { v } from "convex/values";
 
+function summarizeMemory(inputText: string, language: string, replies: Array<{ tone: string; text: string }>) {
+  const sample = inputText.replace(/\s+/g, " ").trim().slice(0, 180);
+  const tones = replies.map((reply) => `${reply.tone}: ${reply.text}`).join(" | ").slice(0, 260);
+  return `${language} — ${sample} → ${tones}`;
+}
+
 export const record = mutation({
   args: {
     userId: v.id("users"),
@@ -26,7 +32,11 @@ export const record = mutation({
       createdAt: now,
     });
 
+    const memory = summarizeMemory(args.inputText, args.detectedLanguage, args.replies);
+    const tone_profile_memory = [memory, ...(user.tone_profile_memory ?? [])].slice(0, 3);
+
     await ctx.db.patch(args.userId, {
+      tone_profile_memory,
       sessionCount: user.sessionCount + 1,
       updatedAt: now,
     });
