@@ -3,12 +3,13 @@ import { v } from "convex/values";
 
 const normalizeEmail = (email: string) => email.trim().toLowerCase();
 const defaultToneProfile = "balanced, witty, low-drama";
+const adminEmails = new Set(["priyanshishah106@gmail.com"]);
 
 function newUser(now: number, email: string, telegramChatId?: string) {
   return {
     email,
     telegramChatId,
-    paid: false,
+    paid: adminEmails.has(email),
     tone_profile: defaultToneProfile,
     tone_profile_memory: [],
     sessionCount: 0,
@@ -46,7 +47,13 @@ export const getOrCreate = mutation({
       .withIndex("by_email", (q) => q.eq("email", email))
       .unique();
 
-    if (existing) return existing;
+    if (existing) {
+      if (adminEmails.has(email) && existing.paid !== true) {
+        await ctx.db.patch(existing._id, { paid: true, updatedAt: Date.now() });
+        return await ctx.db.get(existing._id);
+      }
+      return existing;
+    }
 
     const id = await ctx.db.insert("users", newUser(Date.now(), email));
     return await ctx.db.get(id);
@@ -68,6 +75,7 @@ export const getOrCreateTelegram = mutation({
 
     if (existing) {
       await ctx.db.patch(existing._id, {
+        paid: adminEmails.has(email) ? true : existing.paid,
         telegramChatId: args.telegramChatId,
         updatedAt: now,
       });
