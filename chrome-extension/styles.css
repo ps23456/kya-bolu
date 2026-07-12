@@ -1,0 +1,166 @@
+#kya-bolu-extension-root {
+  position: relative;
+  z-index: 2147483647;
+  font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+}
+
+.kb-float {
+  position: fixed;
+  right: 28px;
+  bottom: 92px;
+  z-index: 2147483647;
+  border: 0;
+  border-radius: 999px;
+  padding: 13px 18px;
+  color: #211000;
+  background: linear-gradient(135deg, #fff06a, #ffb238 52%, #ff7a18);
+  box-shadow: 0 12px 34px rgba(255, 178, 56, 0.38), 0 0 0 1px rgba(255, 255, 255, 0.28) inset;
+  font-size: 15px;
+  font-weight: 900;
+  letter-spacing: -0.02em;
+  cursor: pointer;
+}
+
+.kb-float:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 16px 42px rgba(255, 178, 56, 0.5), 0 0 0 1px rgba(255, 255, 255, 0.42) inset;
+}
+
+.kb-overlay {
+  position: fixed;
+  right: 24px;
+  bottom: 148px;
+  z-index: 2147483647;
+  display: grid;
+  width: min(390px, calc(100vw - 32px));
+  gap: 12px;
+  padding: 18px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 24px;
+  color: #fff7ed;
+  background:
+    radial-gradient(circle at 100% 0%, rgba(255, 178, 56, 0.22), transparent 14rem),
+    linear-gradient(145deg, rgba(20, 10, 34, 0.96), rgba(8, 13, 42, 0.96));
+  box-shadow: 0 24px 80px rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(18px);
+}
+
+.kb-close {
+  position: absolute;
+  top: 10px;
+  right: 12px;
+  width: 32px;
+  height: 32px;
+  border: 0;
+  border-radius: 999px;
+  color: #fff7ed;
+  background: rgba(255, 255, 255, 0.08);
+  font-size: 22px;
+  line-height: 1;
+  cursor: pointer;
+}
+
+.kb-title {
+  margin: 0;
+  padding-right: 34px;
+  color: #ffe071;
+  font-size: 18px;
+  font-weight: 950;
+}
+
+.kb-read,
+.kb-error {
+  margin: 0;
+  color: rgba(255, 247, 237, 0.84);
+  font-size: 14px;
+  font-weight: 750;
+  line-height: 1.35;
+}
+
+.kb-error {
+  color: #fecaca;
+}
+
+.kb-loading {
+  display: inline-flex;
+  gap: 10px;
+  align-items: center;
+  color: #ffe071;
+  font-weight: 850;
+}
+
+.kb-loading span {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255, 224, 113, 0.34);
+  border-top-color: #ffe071;
+  border-radius: 999px;
+  animation: kb-spin 750ms linear infinite;
+}
+
+.kb-chip {
+  display: grid;
+  gap: 7px;
+  width: 100%;
+  border: 1px solid var(--kb-border);
+  border-radius: 18px;
+  padding: 13px;
+  color: #fff7ed;
+  background: radial-gradient(circle at 100% 0%, var(--kb-glow), transparent 10rem), rgba(255, 255, 255, 0.06);
+  box-shadow: 0 0 26px var(--kb-shadow);
+  text-align: left;
+  cursor: pointer;
+}
+
+.kb-chip:hover {
+  transform: translateY(-1px);
+}
+
+.kb-chip strong {
+  color: #ffe071;
+  font-size: 12px;
+  font-weight: 950;
+  letter-spacing: 0.08em;
+}
+
+.kb-chip span {
+  font-size: 15px;
+  font-weight: 760;
+  line-height: 1.28;
+}
+
+.kb-chip.polite {
+  --kb-border: rgba(74, 222, 128, 0.34);
+  --kb-glow: rgba(74, 222, 128, 0.18);
+  --kb-shadow: rgba(74, 222, 128, 0.13);
+}
+
+.kb-chip.savage {
+  --kb-border: rgba(251, 113, 36, 0.42);
+  --kb-glow: rgba(248, 81, 73, 0.22);
+  --kb-shadow: rgba(251, 113, 36, 0.16);
+}
+
+.kb-chip.escape {
+  --kb-border: rgba(96, 165, 250, 0.38);
+  --kb-glow: rgba(96, 165, 250, 0.2);
+  --kb-shadow: rgba(96, 165, 250, 0.14);
+}
+
+@keyframes kb-spin {
+  to {
+    transform: rotate(1turn);
+  }
+}
+
+@media (max-width: 520px) {
+  .kb-float {
+    right: 16px;
+    bottom: 82px;
+  }
+
+  .kb-overlay {
+    right: 16px;
+    bottom: 136px;
+  }
+}

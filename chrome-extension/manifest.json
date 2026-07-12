@@ -1,0 +1,16 @@
+{
+  "manifest_version": 3,
+  "name": "Kya Bolu? for WhatsApp Web",
+  "description": "Draft POLITE, SAVAGE, and ESCAPE replies from the current WhatsApp Web chat.",
+  "version": "1.0.0",
+  "permissions": [],
+  "host_permissions": ["https://kya-bolu.pages.dev/*"],
+  "content_scripts": [
+    {
+      "matches": ["https://web.whatsapp.com/*"],
+      "js": ["content.js"],
+      "css": ["styles.css"],
+      "run_at": "document_idle"
+    }
+  ]
+}
