@@ -5,6 +5,11 @@ const normalizeEmail = (email: string) => email.trim().toLowerCase();
 const defaultToneProfile = "balanced, witty, low-drama";
 const adminEmails = new Set(["priyanshishah106@gmail.com"]);
 
+function withAdminAccess<User extends { email: string; paid?: boolean } | null>(user: User): User {
+  if (!user || !adminEmails.has(user.email)) return user;
+  return { ...user, paid: true };
+}
+
 function newUser(now: number, email: string, telegramChatId?: string) {
   return {
     email,
@@ -21,20 +26,24 @@ function newUser(now: number, email: string, telegramChatId?: string) {
 export const getByEmail = query({
   args: { email: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const user = await ctx.db
       .query("users")
       .withIndex("by_email", (q) => q.eq("email", normalizeEmail(args.email)))
       .unique();
+
+    return withAdminAccess(user);
   },
 });
 
 export const getByTelegramChatId = query({
   args: { telegramChatId: v.string() },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const user = await ctx.db
       .query("users")
       .withIndex("by_telegram_chat_id", (q) => q.eq("telegramChatId", args.telegramChatId))
       .unique();
+
+    return withAdminAccess(user);
   },
 });
 
