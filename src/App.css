@@ -519,3 +519,110 @@ footer {
     opacity: 1;
   }
 }
+
+h2 {
+  margin: 8px 0 18px;
+  color: #fff7ed;
+  font-family: 'Space Grotesk', Inter, sans-serif;
+  font-size: clamp(2rem, 9vw, 3.8rem);
+  line-height: 0.92;
+  letter-spacing: -0.07em;
+}
+
+.profile-card,
+.upgrade-card {
+  margin-top: 18px;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.13);
+  border-radius: 30px;
+  background: rgba(9, 6, 17, 0.66);
+  box-shadow: 0 24px 90px rgba(0, 0, 0, 0.46);
+  backdrop-filter: blur(24px);
+}
+
+.email-card input,
+.profile-card input {
+  width: 100%;
+  padding: 16px;
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: 999px;
+  color: #fff7ed;
+  outline: none;
+  background: rgba(255, 255, 255, 0.07);
+}
+
+.email-card input:focus,
+.profile-card input:focus {
+  border-color: rgba(255, 178, 56, 0.86);
+  box-shadow: 0 0 0 4px rgba(255, 178, 56, 0.14);
+}
+
+.mini-label {
+  margin: 0;
+  color: #ffe071;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.profile-card {
+  display: grid;
+  gap: 14px;
+  align-items: end;
+  border-color: rgba(255, 221, 102, 0.16);
+}
+
+.profile-card label {
+  display: grid;
+  gap: 8px;
+  color: #ffe071;
+  font-size: 0.78rem;
+  font-weight: 900;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.user-email {
+  margin: 5px 0 0;
+  color: #fff7ed;
+  font-weight: 800;
+}
+
+.ghost-button.compact {
+  width: auto;
+  margin-top: 0;
+  justify-self: start;
+}
+
+.upgrade-card {
+  overflow: hidden;
+  position: relative;
+  border-color: rgba(255, 79, 168, 0.28);
+  box-shadow: 0 0 54px rgba(255, 79, 168, 0.16);
+}
+
+.upgrade-card::after {
+  content: '✨';
+  position: absolute;
+  right: 18px;
+  top: 18px;
+  font-size: 2rem;
+}
+
+.upgrade-card p:not(.mini-label) {
+  margin: 0 0 18px;
+  color: #ffe7f5;
+  font-weight: 750;
+}
+
+@media (min-width: 760px) {
+  .profile-card,
+  .upgrade-card {
+    padding: 24px;
+  }
+
+  .profile-card {
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 1.2fr) auto;
+  }
+}
