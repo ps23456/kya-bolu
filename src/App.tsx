@@ -45,6 +45,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(false)
   const [copiedIndex, setCopiedIndex] = useState<number | null>(null)
   const [savageAudio, setSavageAudio] = useState<'idle' | 'loading' | 'error'>('idle')
+  const [factCheck, setFactCheck] = useState<{ status: 'idle' | 'loading' | 'done' | 'error'; text: string }>({ status: 'idle', text: '' })
 
   const user = useQuery(api.users.getByEmail, activeEmail ? { email: activeEmail } : 'skip')
   const getOrCreateUser = useMutation(api.users.getOrCreate)
@@ -199,6 +200,24 @@ function App() {
       setSavageAudio('idle')
     } catch {
       setSavageAudio('error')
+    }
+  }
+
+  async function checkExcuse() {
+    setFactCheck({ status: 'loading', text: '' })
+
+    try {
+      const response = await fetch('/api/fact-check', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({ conversation: conversationText }),
+      })
+      const data = (await response.json()) as { result?: string }
+
+      if (!response.ok || !data.result) throw new Error('Could not verify.')
+      setFactCheck({ status: 'done', text: data.result })
+    } catch {
+      setFactCheck({ status: 'error', text: "Couldn't verify — sus either way 🕵️" })
     }
   }
 
@@ -377,6 +396,12 @@ function App() {
                 </article>
               )
             })}
+          </div>
+          <div className="fact-check-box">
+            <button type="button" className="fact-check-button" onClick={() => void checkExcuse()} disabled={factCheck.status === 'loading'}>
+              {factCheck.status === 'loading' ? 'Investigating... 🕵️' : '🕵️ Fact-check their excuse'}
+            </button>
+            {factCheck.text && <p className={factCheck.status === 'error' ? 'fact-check-result error' : 'fact-check-result'}>{factCheck.text}</p>}
           </div>
         </section>
       )}
