@@ -4,11 +4,14 @@ import { v } from "convex/values";
 export default defineSchema({
   users: defineTable({
     email: v.string(),
+    telegramChatId: v.optional(v.string()),
     tone_profile: v.string(),
     sessionCount: v.number(),
     createdAt: v.number(),
     updatedAt: v.number(),
-  }).index("by_email", ["email"]),
+  })
+    .index("by_email", ["email"])
+    .index("by_telegram_chat_id", ["telegramChatId"]),
 
   sessions: defineTable({
     userId: v.id("users"),
